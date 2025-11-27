@@ -1,16 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
-import { Sparkles, Edit } from 'lucide-react'
+import { Sparkles, Hash } from 'lucide-react'
 
 const BlogTitles = () => {
 
-  const articleLength = [
-      {length: 900, text: 'Short (500-900 words)'},
-      {length: 1500, text: 'Medium (900-1500 words)'},
-      {length: 2200, text: 'Long (1500+ words)'},
-    ]
+  const blogCategories = ['General', 'Technology', 'Business', 'Health', 'Lifestyle', 'Education', 'Travel', 'Food']
   
-    const [selectedLength, setSelectedLength] = useState(articleLength[0])
+    const [selectedCategory, setSelectedCategory] = useState('General')
     const [input, setInput] = useState('')
   
     const onSubmitHandler = async (e)=> {
@@ -25,39 +21,39 @@ const BlogTitles = () => {
       <form onSubmit={onSubmitHandler} className='w-full max-w-lg p-4 bg-white rounded-lg border
       border-gray-200'>
         <div className='flex items-center gap-3'>
-          <Sparkles className='w-6 text-[#4A7AFF]'/>
-          <h1 className='text-xl font-semibold'>Customize Your Article</h1>
+          <Sparkles className='w-6 text-[#8E37EB]'/>
+          <h1 className='text-xl font-semibold'>Create Better Titles with AI</h1>
         </div>
-        <p className='mt-6 text-sm font-medium'>What do you want to write about?</p>
+        <p className='mt-6 text-sm font-medium'>Keyword</p>
         <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" className='w-full p-2 px-3 mt-2 outline-none text-sm 
-        rounded-md border border-gray-300' placeholder='How AI is transforming modern industries…' required/>
+        rounded-md border border-gray-300' placeholder='How AI is transforming modern industries...' required/>
 
-        <p className='mt-4 text-sm font-medium'>How long should the article be?</p>
+        <p className='mt-4 text-sm font-medium'>Category</p>
         <div className='mt-3 flex gap-3 flex-wrap sm:max-w-9/11'>
-          {articleLength.map((item, index)=>(
-            <span onClick={()=> setSelectedLength(item)} className={`text-xs px-4 py-1 border rounded-full 
-            cursor-pointer ${selectedLength.text === item.text ? 'bg-blue-50 text-blue-700' : 'text-gray-500 border-gray-300'}`} key={index}>{item.text}</span>
+          {blogCategories.map((item)=>(
+            <span onClick={()=> setSelectedCategory(item)} className={`text-xs px-4 py-1 border rounded-full 
+            cursor-pointer ${selectedCategory === item ? 'bg-purple-50 text-purple-700' : 'text-gray-500 border-gray-300'}`} key={item}>{item}</span>
           ) )}
         </div>
         <br />
-        <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] 
+        <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#C341F6] to-[#8E37EB] 
         text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-          <Edit className='w-5'/>
-          Write with AI
+          <Hash className='w-5'/>
+          Suggest a Title
         </button>
         
       </form>
       {/* Right Section */}
       <div className='w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border
-      border-gray-200 min-h-96 max-h-[600px]'>
+      border-gray-200 min-h-96'>
           <div className='flex items-center gap-3'>
-            <Edit className='w-5 h-5 text-[#4A7AFF]'/>
-            <h1 className='text-xl font-semibold'>Your AI-Written Article</h1>
+            <Hash className='w-5 h-5 text-[#8E37EB]'/>
+            <h1 className='text-xl font-semibold'>Your Title Suggestions</h1>
           </div>
           <div className='flex-1 flex justify-center items-center'>
             <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
-              <Edit className='w-9 h-9'/>
-              <p>Start by entering a topic, then click "Write with AI" to create your draft. </p>
+              <Hash className='w-9 h-9'/>
+              <p> Start by entering a topic, then get personalized title suggestions instantly. </p>
             </div>
           </div>
       </div>
