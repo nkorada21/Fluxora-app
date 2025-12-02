@@ -19,8 +19,6 @@ const App = () => {
     getToken().then((token)=>console.log(token));
   },[getToken])
 
-
-
   return (
     <div>
       <Routes>
