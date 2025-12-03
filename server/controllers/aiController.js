@@ -5,6 +5,7 @@ import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import { v2 as cloudinary } from 'cloudinary';
 import FormData from "form-data";
+import connectCloudinary from "../configs/cloudinary.js";
 
 const AI = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
