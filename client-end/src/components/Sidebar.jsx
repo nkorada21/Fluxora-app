@@ -30,13 +30,13 @@ const Sidebar = ({ sidebar, setSidebar }) => {
         <div className='px-6 mt-5 text-sm text-gray-600 font-medium'>
           {navItems.map(({to, label, Icon})=>(
             <NavLink  key={to} to={to} end={to === '/ai'} onClick={()=>
-              setSidebar(false)} className={({isActive})=> `px-3.5 py-2.5
-              flex items-center gap-3 rounded ${isActive ? 'bg-gradient-to-r from-[#3C81F6] to-[#9234EA] text-white' : ''}`}>
+              setSidebar(false)} className={({isActive})=> `px-3.5 py-2.5 flex items-center gap-3 rounded ${isActive ? 'bg-gradient-to-r from-[#3C81F6] to-[#9234EA] text-white' : ''}`}>
                 {({ isActive })=>(
                   <>
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}
-                  ` } />
-                  {label}
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} />
+                  <span className={isActive ? 'text-white' : ''}> 
+                    {label}
+                  </span>
                   </>
                 )}
             </NavLink>
@@ -54,7 +54,7 @@ const Sidebar = ({ sidebar, setSidebar }) => {
               <Protect plan='premium' fallback="Free">Premium</Protect> Plan
             </p>
         </div>
-      </div>
+        </div>
         <LogOut onClick={signOut} className='w-4.5 text-gray-400 hover:text-gray-700 transition cursor-pointer'/>
 
       </div>

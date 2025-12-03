@@ -3,12 +3,14 @@ import OpenAI from "openai";
 import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
+import { v2 as cloudinary } from 'cloudinary';
 
 const AI = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
     baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
 });
 
+// Article Generator
 export const generateArticle = async (req, res)=>{
     try {
         const { userId } = req.auth();
@@ -32,7 +34,6 @@ export const generateArticle = async (req, res)=>{
             max_tokens: length,
         });
         
-        
         const content = response.choices[0].message.content
 
     await sql` INSERT INTO CREATIONS (user_id, prompt, content, type)
@@ -54,6 +55,7 @@ export const generateArticle = async (req, res)=>{
     }
 }
 
+// Blog Title Generator
 export const generateBlogTitle = async (req, res)=>{
     try {
         const { userId } = req.auth();
@@ -99,6 +101,7 @@ export const generateBlogTitle = async (req, res)=>{
     }
 }
 
+// Image Generator
 export const generateImage = async (req, res)=>{
     try {
         const { userId } = req.auth();
@@ -116,22 +119,14 @@ export const generateImage = async (req, res)=>{
             responseType: "arraybuffer",
         })
 
-        const base64Image = `data:image/png;base64,${Buffer.from(data, 'binary').toString('base64')}`;
+    const base64Image = `data:image/png;base64,${Buffer.from(data, 'binary').toString('base64')}`;
 
-        
+    const {secure_url} = await cloudinary.uploader.upload(base64Image)
 
-    await sql` INSERT INTO CREATIONS (user_id, prompt, content, type)
-    VALUES (${userId}, ${prompt}, ${content}, 'blog-title')`;
+    await sql` INSERT INTO CREATIONS (user_id, prompt, content, type, publish)
+    VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${publish ?? false })`;
 
-    if(plan !== 'premium'){
-        await clerkClient.users.updateUserMetadata(userId, {
-            privateMetadata:{
-                free_usage: free_usage + 1
-            }
-        })
-    }
-
-    res.json({ success: true, content })
+    res.json({ success: true, content: secure_url })
 
     } catch (error) {
         console.log(error.message)
