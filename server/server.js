@@ -15,7 +15,7 @@ app.use(clerkMiddleware())
 
 app.get('/', (req, res)=>res.send('Server is Live!'))
 
-// app.use(requireAuth())
+app.use(requireAuth())
 
 app.use('/api/ai', aiRouter)
 

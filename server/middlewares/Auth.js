@@ -3,7 +3,7 @@ import { clerkClient } from "@clerk/express";
 
 export const auth = async (req, res, next)=>{
     try {
-        const auth = req.auth;  // from clerkMiddleware
+        const auth = await req.auth();  // from clerkMiddleware
 
         if(!auth || !auth.userId) {
             return res.status(401).json({

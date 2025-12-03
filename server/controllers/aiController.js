@@ -14,7 +14,7 @@ const AI = new OpenAI({
 // Article Generator
 export const generateArticle = async (req, res)=>{
     try {
-        const { userId } = req.auth;
+        const { userId } = req.auth();
         const { prompt, length } = req.body;
         const plan = req.plan;
         const free_usage = req.free_usage;
@@ -53,7 +53,7 @@ export const generateArticle = async (req, res)=>{
 // Blog Title Generator
 export const generateBlogTitle = async (req, res)=>{
     try {
-        const { userId } = req.auth;
+        const { userId } = req.auth();
         const { prompt } = req.body;
         const plan = req.plan;
         const free_usage = req.free_usage;
@@ -93,7 +93,7 @@ export const generateBlogTitle = async (req, res)=>{
 // Image Generator
 export const generateImage = async (req, res)=>{
     try {
-        const { userId } = req.auth;
+        const { userId } = req.auth();
         const { prompt, publish } = req.body;
         const plan = req.plan;
 
