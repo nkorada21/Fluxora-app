@@ -5,7 +5,7 @@ import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import { v2 as cloudinary } from 'cloudinary';
 import FormData from "form-data";
-import connectCloudinary from "../configs/cloudinary.js";
+import fs from 'fs';
 
 const AI = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -117,6 +117,115 @@ export const generateImage = async (req, res)=>{
     VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${publish ?? false })`;
 
     res.json({ success: true, content: secure_url })
+
+    } catch (error) {
+        console.error(error.message)
+        res.json({success: false, message: error.message})
+    }
+}
+
+// Remove Image Background
+export const removeImageBackground = async (req, res)=>{
+    try {
+        const { userId } = req.auth();
+        const { image } = req.file;
+        const plan = req.plan;
+
+        if(plan !== 'premium') {
+            return res.json({success: false, message: "Upgrade to premium to unlock this feature."})
+        }
+
+    const {secure_url} = await cloudinary.uploader.upload(image.path, {
+        transformation: [
+            {
+                effect: 'background_removal',
+                background_removal: 'remove_the_background'
+            }
+        ]
+    })
+
+    await sql` INSERT INTO CREATIONS (user_id, prompt, content, type)
+    VALUES (${userId}, 'Remove background from image', ${secure_url}, 'image')`;
+
+    res.json({ success: true, content: secure_url })
+
+    } catch (error) {
+        console.error(error.message)
+        res.json({success: false, message: error.message})
+    }
+}
+
+// Remove Image Object
+export const removeImageObject = async (req, res)=>{
+    try {
+        const { userId } = req.auth();
+        const { object } = req.body;
+        const { image } = req.file;
+        const plan = req.plan;
+
+        if(plan !== 'premium') {
+            return res.json({success: false, message: "Upgrade to premium to unlock this feature."})
+        }
+
+
+    const {public_id} = await cloudinary.uploader.upload(image.path)
+
+    const imageUrl = cloudinary.url(public_id, {
+        transformation: [{effect: `gen_remove:${object}`}],
+        resource_type: 'image'
+    })
+
+    await sql` INSERT INTO CREATIONS (user_id, prompt, content, type)
+    VALUES (${userId}, ${`Removed ${object} from image`}, ${imageUrl}, 'image')`;
+
+    res.json({ success: true, content: imageUrl })
+
+    } catch (error) {
+        console.error(error.message)
+        res.json({success: false, message: error.message})
+    }
+}
+
+// Resume Analyzer
+export const resumeAnalyzer = async (req, res)=>{
+    try {
+        const { userId } = req.auth();
+        const resume = req.file;
+        const plan = req.plan;
+
+        if(plan !== 'premium') {
+            return res.json({success: false, message: "Upgrade to premium to unlock this feature."})
+        }
+
+        if(resume.size > 5 * 1024 * 1024){
+            return res.json({success: false, message: "Your resume exceeds the 5MB limit. Please upload a smaller file to continue."})
+        }
+
+        // Dynamic import 
+        const pdfParse = (await import("pdf-parse")).default;
+
+        // Read uploaded file
+        const dataBuffer = fs.readFileSync(resume.path);
+
+        // Extract text from PDF
+        const pdfData = await pdfParse(dataBuffer);
+
+        const prompt = `Review the following resume and provide constructive feedback on its 
+        strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
+
+        const response = await AI.chat.completions.create({
+            model: "gemini-2.0-flash",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.7,
+            max_tokens: 1000,
+        });
+        
+        const content = response.choices[0].message.content
+
+    await sql` INSERT INTO CREATIONS (user_id, prompt, content, type)
+    VALUES (${userId}, 'Review the uploaded resume', ${content}, 'resume-analyzer')`;
+
+    res.json({ success: true, content })
 
     } catch (error) {
         console.error(error.message)

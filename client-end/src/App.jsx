@@ -11,16 +11,21 @@ import ResumeAnalyzer from './pages/ResumeAnalyzer'
 import Community from './pages/Community'
 import { useAuth } from '@clerk/clerk-react'
 import { useEffect } from 'react'
+import {Toaster} from 'react-hot-toast'
 
 const App = () => {
 
+  /* --testing for API's Token for Postman check using post method from website 
+  // (inspect -> console token)
   const {getToken} = useAuth()
   useEffect(()=>{
     getToken().then((token)=>console.log(token));
   },[getToken])
+  */
 
   return (
     <div>
+      <Toaster />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/ai' element={<Layout />}>
