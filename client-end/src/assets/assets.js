@@ -10,6 +10,24 @@ import star_dull_icon from "./star_dull_icon.svg";
 import star_icon from "./star_icon.svg";
 import user_group from "./user_group.png";
 
+import linkedin from "./brands/linkedin-logo.svg";
+import instagram from "./brands/instagram-logo.svg";
+import facebook from "./brands/facebook-logo.svg";
+import slack from "./brands/slack-logo.svg";
+import framer from "./brands/Framer-logo.svg";
+import netflix from "./brands/netflix-logo.svg";
+import google from "./brands/google-logo.svg";
+
+export const brandLogos = [
+    linkedin,
+    instagram,
+    facebook,
+    slack,
+    framer,
+    netflix,
+    google,
+];
+
 export const assets = {
     logo,
     gradientBackground,
