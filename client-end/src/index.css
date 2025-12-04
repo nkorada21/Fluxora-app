@@ -17,3 +17,14 @@
 .cl-drawerRoot {
   z-index: 10;
 }
+
+@keyframes brand-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-brand-slide {
+  animation: brand-slide 25s linear infinite;
+  display: flex;
+  width: max-content;
+}

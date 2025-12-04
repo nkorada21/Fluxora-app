@@ -29,7 +29,6 @@ const Hero = () => {
         Trusted by over 5k+ people
       </div>
 
-
     </div>
   )
 }
