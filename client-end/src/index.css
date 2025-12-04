@@ -18,13 +18,17 @@
   z-index: 10;
 }
 
-@keyframes brand-slide {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+@keyframes slow-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.animate-brand-slide {
-  animation: brand-slide 25s linear infinite;
-  display: flex;
+.animate-slow-slide {
+  animation: slow-slide 20s linear infinite;
   width: max-content;
+  display: flex;
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
+import BrandSlider from './BrandSlider'
 
 const Hero = () => {
 
@@ -29,6 +30,10 @@ const Hero = () => {
         Trusted by over 5k+ people
       </div>
 
+    {/* Brand Slider */}
+      <div>
+        <BrandSlider />
+      </div>
     </div>
   )
 }

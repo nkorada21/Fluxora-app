@@ -14,7 +14,6 @@ import linkedin from "./brands/linkedin-logo.svg";
 import instagram from "./brands/instagram-logo.svg";
 import facebook from "./brands/facebook-logo.svg";
 import slack from "./brands/slack-logo.svg";
-import framer from "./brands/Framer-logo.svg";
 import netflix from "./brands/netflix-logo.svg";
 import google from "./brands/google-logo.svg";
 
@@ -23,7 +22,6 @@ export const brandLogos = [
     instagram,
     facebook,
     slack,
-    framer,
     netflix,
     google,
 ];
