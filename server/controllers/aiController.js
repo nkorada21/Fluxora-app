@@ -6,6 +6,8 @@ import axios from "axios";
 import { v2 as cloudinary } from 'cloudinary';
 import FormData from "form-data";
 import fs from 'fs';
+import { PDFExtract } from "pdf.js-extract";
+import { Page } from "openai/pagination";
 
 const AI = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -128,7 +130,7 @@ export const generateImage = async (req, res)=>{
 export const removeImageBackground = async (req, res)=>{
     try {
         const { userId } = req.auth();
-        const { image } = req.file;
+        const image = req.file;
         const plan = req.plan;
 
         if(plan !== 'premium') {
@@ -160,7 +162,7 @@ export const removeImageObject = async (req, res)=>{
     try {
         const { userId } = req.auth();
         const { object } = req.body;
-        const { image } = req.file;
+        const image = req.file;
         const plan = req.plan;
 
         if(plan !== 'premium') {
@@ -201,17 +203,19 @@ export const resumeAnalyzer = async (req, res)=>{
             return res.json({success: false, message: "Your resume exceeds the 5MB limit. Please upload a smaller file to continue."})
         }
 
-        // Dynamic import 
-        const pdfParse = (await import("pdf-parse")).default;
+        // Extract text using pdf.js-extract
+        const pdfExtract = new PDFExtract();
+        const data = await pdfExtract.extract(resume.path);
 
-        // Read uploaded file
-        const dataBuffer = fs.readFileSync(resume.path);
-
-        // Extract text from PDF
-        const pdfData = await pdfParse(dataBuffer);
+        let extractedText = "";
+        data.pages.forEach((page) => {
+            page.content.forEach((item) => {
+                extractedText += item.str + " ";
+            });
+        });
 
         const prompt = `Review the following resume and provide constructive feedback on its 
-        strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
+        strengths, weaknesses, and areas for improvement. Resume Content:\n\n${extractedText}`;
 
         const response = await AI.chat.completions.create({
             model: "gemini-2.0-flash",
